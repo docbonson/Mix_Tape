@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "663548026973",
+    "firebase_url": "https://mix-tape-12195.firebaseio.com",
+    "project_id": "mix-tape-12195",
+    "storage_bucket": "mix-tape-12195.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663548026973:android:5798efddaaeb17571f2db4",
+        "android_client_info": {
+          "package_name": "com.bonsondave.android.mixtape"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663548026973-hfe6n1psb7eu259lvlvjn1563a4r9jun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6b9W_YFXQtnnG5kUZ1OP5jrcFFx39o_o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663548026973-hfe6n1psb7eu259lvlvjn1563a4r9jun.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

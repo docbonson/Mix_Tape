@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Mix Tape</string>
+    <string name="add_mix_tape">Add Mix-Tape</string>
+    <string name="tv_login"><u>LOGIN</u></string>
+</resources>

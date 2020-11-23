@@ -42,6 +42,8 @@ class LogInActivity : AppCompatActivity() {
     private fun showSignInOptions() {
         startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
             .setAvailableProviders(providers)
+            .setLogo(R.drawable.logo)
+            .setTheme(R.style.logInTheme)
             .build(),MY_REQUEST_CODE)
     }
 

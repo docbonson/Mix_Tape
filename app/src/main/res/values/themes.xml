@@ -17,4 +17,15 @@
     <style name="logInTheme" parent="Theme.MixTape">
         <item name="background">@drawable/gradient_1</item>
     </style>
+
+    <style name="FullScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="SeekBarTheme" parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">@color/retro_orange</item>
+    </style>
 </resources>

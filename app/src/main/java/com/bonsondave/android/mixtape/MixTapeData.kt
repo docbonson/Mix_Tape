@@ -1,5 +1,8 @@
 package com.bonsondave.android.mixtape
 
-data class MixTapeData(val mixTitle: String,
-                       val songTitle: String,
-                       val artist: String)
+import android.provider.ContactsContract
+import androidx.annotation.RawRes
+
+data class MixTapeData(val songTitle: String,
+                       val artist: String,
+                        val songFile: Int)

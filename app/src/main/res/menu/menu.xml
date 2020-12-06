@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="add_mix"
+        android:id="@+id/add_mix"
         android:icon="@drawable/ic_add"
         android:iconTint="@color/white"
         android:title="@string/add_mix_tape"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="menu_signOut"
+        android:id="@+id/menu_signOut"
         android:title="Sign Out"
         app:showAsAction="never" />
 </menu>

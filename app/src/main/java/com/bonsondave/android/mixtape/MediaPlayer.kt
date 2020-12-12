@@ -1,6 +1,8 @@
 package com.bonsondave.android.mixtape
 
 
+import android.content.ClipData
+import android.content.ClipData.Item
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +10,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.*
 
 
@@ -34,15 +37,15 @@ class MediaPlayer : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player_activity)
 
-        play = findViewById(R.id.btn_play_from_list)
-        skip = findViewById(R.id.btn_next)
-        previous = findViewById(R.id.btn_previous)
-        seekbar = findViewById(R.id.player_SeekBar)
-        songTitle = findViewById(R.id.songTitle)
-        artist = findViewById(R.id.artist)
-        mixName = findViewById(R.id.mix_Name)
+//        play = findViewById(R.id.btn_play_from_list)
+//        skip = findViewById(R.id.btn_next)
+//        previous = findViewById(R.id.btn_previous)
+//        seekbar = findViewById(R.id.player_SeekBar)
+//        songTitle = findViewById(R.id.songTitle)
+//        artist = findViewById(R.id.artist)
+//        mixName = findViewById(R.id.mix_Name)
 
-        controlSound(currentSong[0])
+//        controlSound(currentSong[0])
     }
 
     //media player button functions
@@ -102,5 +105,10 @@ class MediaPlayer : AppCompatActivity() {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+        val signOut: Item = findViewById(R.id.menu_signOut)
     }
 }

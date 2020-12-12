@@ -9,10 +9,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MixTape">
-        <activity android:name=".MediaPlayer"
-            android:theme="@style/FullScreen"></activity>
+        <activity android:name=".RecyclerItem"></activity>
+        <activity android:name=".MediaPlayer" />
         <activity android:name=".RecyclerList" />
-        <activity android:name=".AddSongInfo" />
         <activity android:name=".LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -9,9 +9,11 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MixTape">
-        <activity android:name=".RecyclerItem"></activity>
+<!--        <activity android:name=".RecyclerItem"></activity>-->
         <activity android:name=".MediaPlayer" />
-        <activity android:name=".RecyclerList" />
+        <activity android:name=".RecyclerList"
+            android:parentActivityName=".LogInActivity">
+        </activity>
         <activity android:name=".LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

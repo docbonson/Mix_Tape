@@ -13,4 +13,9 @@
         android:id="@+id/menu_signOut"
         android:title="Sign Out"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_bypass"
+        android:title="Bypass Sign In"
+        app:showAsAction="never" />
 </menu>

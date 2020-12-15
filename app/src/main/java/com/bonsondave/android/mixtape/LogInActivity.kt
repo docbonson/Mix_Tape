@@ -1,16 +1,19 @@
 package com.bonsondave.android.mixtape
 
 import android.app.Activity
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.edit
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
@@ -30,6 +33,7 @@ class LogInActivity : AppCompatActivity() {
     lateinit var providers : List<AuthUI.IdpConfig>
 
     lateinit var sharedPref: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.logInTheme)
@@ -42,6 +46,8 @@ class LogInActivity : AppCompatActivity() {
             getString(R.string.preference_logIn), Context.MODE_PRIVATE
         )
 
+        editor = sharedPref.edit()
+
 
         //init
         providers = Arrays.asList<AuthUI.IdpConfig>(
@@ -51,28 +57,52 @@ class LogInActivity : AppCompatActivity() {
 
 
         showSignInOptions()
+
+//        AuthUI.getInstance()
+//            .signOut(this)
+//            .addOnCompleteListener {
+//                // ...
+//            }
+
     }
 
-    //menu
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu,menu)
-
+    //Menu options
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-
+        when (item.itemId)
+        {
+            R.id.menu_bypass ->
+            {
+//                val intent = Intent(this, RecyclerList::class.java)
+                bypassSignIn()
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-
         return super.onOptionsItemSelected(item)
     }
+
     //menu ends
 
+    //Build screen
     private fun showSignInOptions() {
-
         //check if shared preference UID is there
-        if(sharedPref.toString() != "") {
+//        if(sharedPref.toString() != "") {
+        if(!sharedPref.contains("com.bonsondave.android.mixtape.LOGIN_PREFERENCE")) {
+
+//            bypassSignIn()
+
+//            startActivityForResult(
+//                    AuthUI.getInstance().createSignInIntentBuilder()
+//                            .setAvailableProviders(providers)
+//                            .setLogo(R.drawable.logo)
+//                            .setTheme(R.style.logInTheme)
+//                            .build(), MY_REQUEST_CODE)
+        } else if(sharedPref.toString() != "") {
             bypassSignIn()
         }
         else {
@@ -81,19 +111,19 @@ class LogInActivity : AppCompatActivity() {
                 .setAvailableProviders(providers)
                 .setLogo(R.drawable.logo)
                 .setTheme(R.style.logInTheme)
-                .build(), MY_REQUEST_CODE
-        )
+                .build(), MY_REQUEST_CODE)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Companion.MY_REQUEST_CODE) {
-            val response = IdpResponse.fromResultIntent(data)
-
             //if logout, change theme to recreate() after setTheme
+            editor.remove(resources.getString(R.string.preference_logIn))
+            editor.apply()
+            showSignInOptions()
 
-            if (resultCode == Activity.RESULT_OK) {
+        } else if (resultCode == Activity.RESULT_OK) {
                 val user = FirebaseAuth.getInstance().currentUser // get current user
                 Toast.makeText(this, "" + user!!.email, Toast.LENGTH_SHORT).show()
 
@@ -105,17 +135,15 @@ class LogInActivity : AppCompatActivity() {
                 bypassSignIn()
 
             } else {
-                Toast.makeText(this, "" + response!!.error!!.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
             }
         }
-    }
 
-    //TODO add back logic (or log out) force Firebase UI Login
 
     fun bypassSignIn() {
         //start next activity on log in
         val intent = Intent(this, RecyclerList::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, MY_REQUEST_CODE)
         //sliding animation
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
     }

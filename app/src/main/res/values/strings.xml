@@ -7,4 +7,6 @@
     <string name="txt_tracks">Tracks</string>
     <string name="_1_34">1:34</string>
     <string name="_4_19">4:19</string>
+
+    <string name="placeholder_name">Dave\'s Mix</string>
 </resources>

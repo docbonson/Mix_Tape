@@ -1,103 +1,116 @@
 package com.bonsondave.android.mixtape
 
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipData.Item
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Message
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_media_player_activity.*
 
 
 class MediaPlayer : AppCompatActivity() {
 
-    private lateinit var play: Button
-    private lateinit var skip: Button
-    private lateinit var previous: Button
-    private lateinit var seekbar: SeekBar
-    private lateinit var songTitle: TextView
-    private lateinit var artist: TextView
-    private lateinit var mixName: TextView
-
-    private var mp: MediaPlayer? = null
-
-    private var currentSong: MutableList<Int> = mutableListOf(R.raw.hot_hot_hot, R.raw.heroin_gun, R.raw.just_like_you_just_like_me)
-
-//    var currentSong = listOf<MixTapeData>(MixTapeData("Hot Hot Hot", "Skizzwhores", R.raw.hot_hot_hot),
-//            MixTapeData("Just Like You, Just Like Me", "Skizzwhores", R.raw.just_like_you_just_like_me),
-//            MixTapeData("Heroin Gun", "Skizzwhores", R.raw.heroin_gun))
-
+    private lateinit var mp: MediaPlayer
+    private var totalTime: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player_activity)
 
-//        play = findViewById(R.id.btn_play_from_list)
-//        skip = findViewById(R.id.btn_next)
-//        previous = findViewById(R.id.btn_previous)
-//        seekbar = findViewById(R.id.player_SeekBar)
-//        songTitle = findViewById(R.id.songTitle)
-//        artist = findViewById(R.id.artist)
-//        mixName = findViewById(R.id.mix_Name)
+        mp = MediaPlayer.create(this, R.raw.hot_hot_hot)
+        mp.isLooping = true
+        totalTime = mp.duration
 
-//        controlSound(currentSong[0])
+        // seek bar
+        player_SeekBar.max = totalTime
+        player_SeekBar.setOnSeekBarChangeListener(
+                object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                            seekBar: SeekBar?,
+                            progress: Int,
+                            fromUser: Boolean
+                    ) {
+                        if (fromUser) {
+                            mp.seekTo(progress)
+                        }
+                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    }
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    }
+                }
+        )
+
+        //Thread
+        Thread(Runnable {
+            while (mp != null) {
+                try {
+                    var msg = Message()
+                    msg.what = mp.currentPosition
+                    handler.sendMessage(msg)
+                    Thread.sleep(1000)
+                } catch (e: InterruptedException) {
+                }
+            }
+        }).start()
+
+    }
+
+    @SuppressLint("HandlerLeak")
+    var handler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            var currentPosition = msg.what
+
+            //update position bar
+            player_SeekBar.progress = currentPosition
+
+            //update labels
+            var elapsedTime = createTimeLabel(currentPosition)
+            textCurrentTime.text = elapsedTime
+
+            var remainingTimeLabel = createTimeLabel(totalTime - currentPosition)
+            textTotalTime.text = "-$remainingTimeLabel"
+        }
+    }
+
+    fun createTimeLabel(time: Int): String {
+        var timeLable = ""
+        var min = time / 1000 / 60
+        var sec = time / 1000 % 60
+
+        timeLable = "$min"
+        if (sec < 10) timeLable += "0"
+        timeLable += sec
+
+        return timeLable
     }
 
     //media player button functions
-    private fun controlSound(id: Int) {
+    fun btnPlay(view: View) {
+        if (mp.isPlaying) {
+            //stop
+            mp.pause()
+            btn_play.setBackgroundResource(R.drawable.ic_play)
+            stopAnimation()
 
-        play.setOnClickListener {
+        } else {
+            //start
+            mp.start()
+            btn_play.setBackgroundResource(R.drawable.ic_pause)
+            startAnimation()
 
-            if (mp == null){
-                mp = MediaPlayer.create(this, id)
-                Log.d("MainActivity", "ID: ${mp!!.audioSessionId}")
-
-                initialiseSeekBar()
-            }
-            mp?.start()
-            Log.d("MainActivity", "Duration: ${mp!!.duration/1000} seconds")
         }
-
-//        buttonPause.setOnClickListener{
-//            if(mp != null) mp?.pause()
-//            Log.d("MainActivity", "Paused at: ${mp!!.currentPosition/1000} seconds")
-//        }
-
-
-        //Seekbar
-        seekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(fromUser) mp?.seekTo(progress)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
-    }
-
-    private fun initialiseSeekBar() {
-
-        seekbar.max = mp!!.duration
-        val handler = Handler()
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                try {
-                    seekbar.progress = mp!!.currentPosition
-                    handler.postDelayed(this, 1000)
-                } catch (e:Exception) {
-                    seekbar.progress = 0
-                }
-            }
-        }, 0)
     }
 
     //Menu options
@@ -111,4 +124,19 @@ class MediaPlayer : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
         val signOut: Item = findViewById(R.id.menu_signOut)
     }
+
+    //Animation to spin the vinyl image
+    private fun startAnimation() {
+        val spin = AnimationUtils.loadAnimation(this,R.anim.anim_rotate)
+        rightSpindle.startAnimation(spin)
+        leftSpindle.startAnimation(spin)
+    }
+
+    private fun stopAnimation() {
+        rightSpindle.clearAnimation()
+        leftSpindle.clearAnimation()
+    }
+
+
+
 }

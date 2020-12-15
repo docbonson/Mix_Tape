@@ -1,5 +1,6 @@
 package com.bonsondave.android.mixtape
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_recycler_list.*
 
@@ -28,7 +32,7 @@ class RecyclerList : AppCompatActivity(), MixTapeRecyclerAdapter.OnItemClickList
     }
 
     override fun onItemClick(position: Int) {
-        val clickedItem:MixTapeData = itemList[position]
+        val clickedItem: MixTapeData = itemList[position]
         val intent = Intent(this, MediaPlayer::class.java)
         startActivity(intent)
     }
@@ -36,7 +40,7 @@ class RecyclerList : AppCompatActivity(), MixTapeRecyclerAdapter.OnItemClickList
     private fun generateDummyList(size: Int): List<MixTapeData> {
         val list = ArrayList<MixTapeData>()
 
-       val item = MixTapeData("Dave's Mix", "Hot Hot Hot", "Skizzwhores", R.raw.hot_hot_hot)
+        val item = MixTapeData("Dave's Mix", "Hot Hot Hot", "Skizzwhores", R.raw.hot_hot_hot)
         list += item
         return list
     }
@@ -49,8 +53,27 @@ class RecyclerList : AppCompatActivity(), MixTapeRecyclerAdapter.OnItemClickList
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        //Eventually add logic to turn off music
+        when (item.itemId) {
+            R.id.menu_signOut -> {
+                //will want to eventually move this to first activity(LogInActivity)
+                //Check to see if logged in
+//                FirebaseAuth.getInstance().signOut()
+
+//                val intent = Intent(this, LogInActivity::class.java)
+                val data: Intent = Intent()
+//                data.putExtra(EXTRA_MESSAGE, passBack)
+                setResult(MY_REQUEST_CODE, data)
+
+                finish()
+            }
+        }
         return super.onOptionsItemSelected(item)
-        val signOut: ClipData.Item = findViewById(R.id.menu_signOut)
     }
 
+
+    //MAKE GLOBAL
+    companion object {
+        const val MY_REQUEST_CODE: Int = 7117
+    }
 }
